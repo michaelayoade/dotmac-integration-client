@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dotmac-integration-client"
-version = "0.1.0"
+version = "0.1.1"
 description = "Canonical HTTP transport for Dotmac inter-service integration edges: policy-driven retry with jitter, Retry-After, reachability circuit, idempotency keys, request-id propagation, and metrics hooks."
 authors = ["Dotmac Technologies <noc@dotmac.io>"]
 readme = "README.md"

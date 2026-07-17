@@ -202,7 +202,9 @@ class IntegrationHttpClient:
                 )
                 if self._circuit is not None:
                     self._circuit.reset()
-                self._observe(method, path, response.status_code, started)
+                self._observe(
+                    method, path, getattr(response, "status_code", None), started
+                )
                 return self._response_handler(response, **handler_kwargs)
             except BaseException as exc:
                 last_error = exc
