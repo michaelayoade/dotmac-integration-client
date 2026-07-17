@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "dotmac-integration-client"
+version = "0.1.0"
+description = "Canonical HTTP transport for Dotmac inter-service integration edges: policy-driven retry with jitter, Retry-After, reachability circuit, idempotency keys, request-id propagation, and metrics hooks."
+authors = ["Dotmac Technologies <noc@dotmac.io>"]
+readme = "README.md"
+packages = [{ include = "dotmac_integration", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+httpx = ">=0.24"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+ruff = "^0.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
