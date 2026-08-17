@@ -1,0 +1,44 @@
+name: Install pinned Poetry
+description: Install the repository-owned, hash-locked Poetry toolchain
+
+runs:
+  using: composite
+  steps:
+    - name: Select and validate this interpreter's bootstrap
+      id: lock
+      shell: bash
+      run: |
+        set -euo pipefail
+        py="$(python -c 'import sys; print(f"{sys.version_info.major}{sys.version_info.minor}")')"
+        req=".github/bootstrap/poetry-requirements-py${py}.txt"
+        if [ ! -f "$req" ]; then
+          echo "::error::no hash-locked Poetry bootstrap for Python ${py}: ${req}"
+          exit 1
+        fi
+        python scripts/check_poetry_toolchain.py --bootstrap "$req"
+        echo "req=${req}" >> "$GITHUB_OUTPUT"
+
+    - name: Install Poetry into a fresh job-local environment
+      shell: bash
+      run: |
+        set -euo pipefail
+        req="${{ steps.lock.outputs.req }}"
+        venv="${RUNNER_TEMP}/poetry-bootstrap"
+        rm -rf "$venv"
+        python -m venv "$venv"
+        "$venv/bin/python" -m pip install --disable-pip-version-check \
+          --require-hashes --only-binary=:all: -r "$req"
+        echo "${venv}/bin" >> "$GITHUB_PATH"
+        PATH="${venv}/bin:${PATH}" python scripts/check_poetry_toolchain.py \
+          --bootstrap "$req" --active
+        PATH="${venv}/bin:${PATH}" "$venv/bin/poetry" check --lock
+        "$venv/bin/poetry" config virtualenvs.create true
+        "$venv/bin/poetry" config virtualenvs.in-project true
+
+    - name: Assert PATH resolves to the verified Poetry
+      shell: bash
+      run: |
+        set -euo pipefail
+        want="${RUNNER_TEMP}/poetry-bootstrap/bin/poetry"
+        got="$(command -v poetry)"
+        test "$got" = "$want"

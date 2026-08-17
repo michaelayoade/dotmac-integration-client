@@ -1,16 +1,23 @@
 name: CI
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
   push:
     branches: [main]
+  workflow_dispatch:
+
 jobs:
-  test:
+  quality:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [poetry-lock-check, lint, format-check, test, package-check]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install httpx pytest ruff
-      - run: ruff check src tests && ruff format --check src tests
-      - run: PYTHONPATH=src pytest tests -q
+      - uses: ./.github/actions/setup-poetry
+      - run: poetry install
+      - run: make ${{ matrix.target }}
