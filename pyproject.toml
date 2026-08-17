@@ -1,10 +1,13 @@
 [tool.poetry]
 name = "dotmac-integration-client"
-version = "0.1.1"
+version = "0.2.0"
 description = "Canonical HTTP transport for Dotmac inter-service integration edges: policy-driven retry with jitter, Retry-After, reachability circuit, idempotency keys, request-id propagation, and metrics hooks."
 authors = ["Dotmac Technologies <noc@dotmac.io>"]
 readme = "README.md"
-packages = [{ include = "dotmac_integration", from = "src" }]
+packages = [{ include = "dotmac_integration_client", from = "src" }]
+# One exact build tool produces the lock and CI environment. Every installer
+# derives from this value; scripts/check_poetry_toolchain.py enforces it.
+requires-poetry = "2.4.1"
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -21,3 +24,6 @@ build-backend = "poetry.core.masonry.api"
 [tool.ruff]
 line-length = 88
 target-version = "py311"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

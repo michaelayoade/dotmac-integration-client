@@ -5,7 +5,7 @@ from __future__ import annotations
 import httpx
 import pytest
 
-from dotmac_integration import (
+from dotmac_integration_client import (
     IntegrationHttpClient,
     ReachabilityCircuit,
     exponential_backoff,
