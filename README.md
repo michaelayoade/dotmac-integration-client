@@ -14,13 +14,23 @@ hops), and a best-effort metrics observer hook.
 
 ```toml
 [tool.poetry.dependencies]
-dotmac-integration-client = { git = "https://github.com/michaelayoade/dotmac-integration-client.git", tag = "v0.1.0" }
+dotmac-integration-client = { git = "https://github.com/michaelayoade/dotmac-integration-client.git", tag = "v0.2.0" }
 ```
+
+## Import name
+
+The distribution is `dotmac-integration-client`; the import package is
+**`dotmac_integration_client`**. These differ on purpose. Up to and including
+v0.1.1 this package installed as top-level `dotmac_integration`, which is the
+import name owned by the Starter's `dotmac-integration` module (the connector
+control plane) — a different distribution with a different job. Installing both
+in one environment made `import dotmac_integration` resolve to whichever was
+installed last. v0.2.0 vacates that name; see `CHANGELOG.md`.
 
 ## Usage sketch
 
 ```python
-from dotmac_integration import (
+from dotmac_integration_client import (
     IntegrationHttpClient, ReachabilityCircuit, exponential_backoff,
 )
 
